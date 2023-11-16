@@ -72,7 +72,6 @@ function curl_mail ($post, $method=false, $file=false, $url=false, $callback=fal
     curl_close($ch);
     if($callback) return $result;
     return true;
-   // var_dump($result);
 }
 
 // giphy
@@ -122,7 +121,7 @@ function call_openai ($txt, $messages=false) {
     $result = curl_exec($ch);
     curl_close($ch);
     $result = json_decode($result);
-    return (empty($result->choices)) ? 'не знаю що сказати(' : $result->choices;
+    return (empty($result->choices)) ? 'не знаю що сказати :( ' . json_encode($result) : $result->choices;
 }
 // weatherapi
 function call_weather ($city) {
@@ -212,8 +211,8 @@ function command_processor ($bot) {
       break;
     // get the weather from the weather site, convert it into human text and return it to the user
     case str_has_array($ask, ['як погода', 'яка погода', 'погода в']):
-      bot_says(bot_chat_id($bot), 'Дивлюсь');
-      $ask = str_replace(['як погода', 'яка погода'], '', $ask);
+      $ask = str_replace(['як погода', 'яка погода', 'погода в'], '', $ask);
+      bot_says(bot_chat_id($bot), 'Дивлюсь погоду ' . $ask);
       if( !$ask ) return bot_says(bot_chat_id($bot), 'Вкажіть місто, приклад: "Погода в Києві"');
 
       $pre_txt = 'Поверни назву міста, без додаткових коментарів, одним словом, англійською з наступного тексту: ';
