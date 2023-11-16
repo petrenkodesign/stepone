@@ -1,4 +1,4 @@
-# Степан  # v.1.0.0
+# Степан  # v.1.0.1a
 Степан (stepone) - simple telegram chatbot which use chatGPT - open AI generative model
 ![Stepan-640x640](https://raw.githubusercontent.com/petrenkodesign/stepone/37e0ce0fc36e83182f3c262af01d83385e87197d/avatar.jpg)
 
@@ -20,6 +20,7 @@ open in the editor script openai_telegram_bot.php, and edit constant records:
 define('BOT_TOKEN', 'telegram_bot_token');
 define('OAI_KEY', 'open_ai_api_token');
 define('GIPHY_API_KEY', 'giphy_api_token');
+define('WEATHER_API_KEY', 'weather_api_token');
 define('BOT_USERNAME', 'stepone_bot');
 ```
 
@@ -30,6 +31,8 @@ OAI_KEY - open ai API token.
 [Howto create open AI account and use chatbot](https://chat.openai.com/share/6bf0a9ae-1171-4d21-8427-17959a8f4b2d)
 
 GIPHY_API_KEY - giphy.com API key. [How to create giphy API key](https://chat.openai.com/share/a51c3b22-8fd7-4c8f-bb3f-3ee96ec3a462)
+
+WEATHER_API_KEY - weatherapi.com API key. [How to create weatherapi key](https://chat.openai.com/share/1cc2dcff-f144-4ecd-aeff-d8868428e689)
 
 BOT_USERNAME - any username for your telegram bot that you define when you create it.
 
@@ -47,7 +50,7 @@ Call the bot in telegram by nickname "Степан", "Степане", "Степ
 
 ``Степко, what is the speed of light?``
 
-you can change bot nicnames in array on 199 line in open_telegram_bot.php script
+you can change bot nicnames in array on 234 line in open_telegram_bot.php script
 
 ``case (str_has_array($ask, ['cтепан', 'cтепане', 'степанко', 'степко']) || $has_replay):``
 

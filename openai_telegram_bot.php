@@ -5,6 +5,7 @@ header('Content-Type: text/html; charset =utf-8');
 define('BOT_TOKEN', 'telegram_bot_token');
 define('OAI_KEY', 'open_ai_api_token');
 define('GIPHY_API_KEY', 'giphy_api_token');
+define('WEATHER_API_KEY', 'weather_api_token');
 define('BOT_USERNAME', 'stepone_bot');
 
 $sop = fopen('php://input', 'r');
@@ -102,7 +103,7 @@ function call_openai ($txt, $messages=false) {
         'top_p' => 0.8,
         'frequency_penalty' => 0,
         'presence_penalty' => 0,
-        "stop" => ['stop', 'стоп', 'зупинись', 'досить'],
+        'stop' => ['stop'],
         'messages' => $messages
 
     ];
@@ -122,6 +123,20 @@ function call_openai ($txt, $messages=false) {
     curl_close($ch);
     $result = json_decode($result);
     return (empty($result->choices)) ? 'не знаю що сказати(' : $result->choices;
+}
+// weatherapi
+function call_weather ($city) {
+  $post = [
+      'key' => WEATHER_API_KEY,
+      'aqi' => 'no',
+      'q' => $city
+  ];
+  $ch = curl_init('https://api.weatherapi.com/v1/current.json?'.http_build_query($post));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+  $result = curl_exec($ch);
+  curl_close($ch);
+  return $result;
 }
 // ---------------------------------------------------------- bot`s data (ботодані)
 function bot_chat_id ($bot=false) {
@@ -195,22 +210,40 @@ function command_processor ($bot) {
       $img_name = str_replace("покажи картинку", '', $ask);
       send_gif($img_name, $bot);
       break;
+    // get the weather from the weather site, convert it into human text and return it to the user
+    case str_has_array($ask, ['як погода', 'яка погода', 'погода в']):
+      bot_says(bot_chat_id($bot), 'Дивлюсь');
+      $ask = str_replace(['як погода', 'яка погода'], '', $ask);
+      if( !$ask ) return bot_says(bot_chat_id($bot), 'Вкажіть місто, приклад: "Погода в Києві"');
+
+      $pre_txt = 'Поверни назву міста, без додаткових коментарів, одним словом, англійською з наступного тексту: ';
+      $ai_answer = call_openai( $pre_txt . '"' . $ask . '"' );
+
+      if( !empty( $ai_answer[0]->message->content ) ) {
+        $weather_json = call_weather ( $ai_answer[0]->message->content );
+        $pre_txt = 'Зроби повний опис, резюме про погоду з наступного тексту: ';
+        $ai_answer = call_openai( $pre_txt . $weather_json );
+        bot_says( bot_chat_id($bot), @$ai_answer[0]->message->content ?: 'нічого не знайшов' );
+      } else {
+        bot_says( bot_chat_id($bot), $ai_answer );
+      }
+      break;
     // for calling bot use array below ['cтепан', 'cтепане', 'степанко', 'степко'] or replay on bot msg
     case (str_has_array($ask, ['cтепан', 'cтепане', 'степанко', 'степко']) || $has_replay):
       // openai functionality
       $whait_msg = ['дайте подумати...', 'момент...', 'думаю...', 'хвилинку...', 'зара оповім', 'ем...', 'я думаю...', 'трошки зайнятий...', 'я тут...' ];
 
       $whm_id = random_int(0, count($whait_msg));
-      bot_says(bot_chat_id($bot), $whait_msg[$whm_id]);
+      bot_says( bot_chat_id($bot), $whait_msg[$whm_id] );
 
       $ai_answer = call_openai($ask, $has_replay);
 
       if( !is_array($ai_answer) ) {
-        bot_says(bot_chat_id($bot), $ai_answer);
+        bot_says( bot_chat_id($bot), $ai_answer );
       } else {
         foreach($ai_answer as $answer) {
           // bot_says ($chat_id, $text, $reply=false)
-          bot_says(bot_chat_id($bot), (empty($answer->message->content)) ? 'немає що сказати' : $answer->message->content, bot_msg_id($bot));
+          bot_says( bot_chat_id($bot), (empty($answer->message->content)) ? 'немає що сказати' : $answer->message->content, bot_msg_id($bot) );
         }
       }
       break;
