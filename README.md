@@ -1,4 +1,4 @@
-# Степан  # v.1.0.1a
+# Степан  # v.1.0.1b
 Степан (stepone) - simple telegram chatbot which use chatGPT - open AI generative model
 ![Stepan-640x640](https://raw.githubusercontent.com/petrenkodesign/stepone/37e0ce0fc36e83182f3c262af01d83385e87197d/avatar.jpg)
 
