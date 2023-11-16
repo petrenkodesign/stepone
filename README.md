@@ -1,5 +1,5 @@
 # Степан  # v.1.0.0
-Степан (stepone) - simple telegram chat bot wich use chatGPT - open AI generative model
+Степан (stepone) - simple telegram chatbot which use chatGPT - open AI generative model
 ![Stepan-640x640](https://raw.githubusercontent.com/petrenkodesign/stepone/37e0ce0fc36e83182f3c262af01d83385e87197d/avatar.jpg)
 
 ### Requirements
@@ -39,5 +39,16 @@ Create Webhook for bot
 
 ```
 curl --location 'https://api.telegram.org/telegram_bot_token/setWebhook' \
---form 'url="https://you.domain/openai_telegram_bot.php"'
+--form 'url="https://your.domain/openai_telegram_bot.php"'
 ```
+
+### Usage
+Call the bot in telegram by nickname "Степан", "Степане", "Степанко", "Степко".
+
+``Степко, what is the speed of light?``
+
+you can change bot nicnames in array on 199 line in open_telegram_bot.php script
+
+``case (str_has_array($ask, ['cтепан', 'cтепане', 'степанко', 'степко']) || $has_replay):``
+
+use the nicknames you want with a lowercase letter

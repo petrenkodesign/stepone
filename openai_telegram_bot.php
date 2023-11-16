@@ -195,8 +195,8 @@ function command_processor ($bot) {
       $img_name = str_replace("покажи картинку", '', $ask);
       send_gif($img_name, $bot);
       break;
-    // for calling bot use array below ['серьожа', 'серьожка', 'серж', 'сергійко', 'сергій'] or replay on bot msg
-    case (str_has_array($ask, ['серьожа', 'серьожка', 'серж', 'сергійко', 'сергій']) || $has_replay):
+    // for calling bot use array below ['cтепан', 'cтепане', 'степанко', 'степко'] or replay on bot msg
+    case (str_has_array($ask, ['cтепан', 'cтепане', 'степанко', 'степко']) || $has_replay):
       // openai functionality
       $whait_msg = ['дайте подумати...', 'момент...', 'думаю...', 'хвилинку...', 'зара оповім', 'ем...', 'я думаю...', 'трошки зайнятий...', 'я тут...' ];
 
